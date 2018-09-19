@@ -8,8 +8,6 @@ USE sakila;
 SELECT first_name, last_name
 FROM actor;
 
-select * from actor;
-
 -- 1b. Display the first and last name of each actor in a single column in upper case letters. Name the column Actor Name
 SELECT CONCAT (first_name, " ", last_name) AS 'Actor Name' FROM actor;
 
@@ -23,7 +21,7 @@ WHERE last_name LIKE "%GEN%";
 
 -- 2c. Find all actors whose last names contain the letters LI. This time, order the rows by last name and first name, in that order:
 SELECT last_name, first_name FROM actor
-WHERE last_name LIKE "%LI%"
+WHERE last_name LIKE "%LI%" or first_name LIKE "%LI%"
 ORDER BY last_name, first_name;
 
 -- 2d. Using IN, display the country_id and country columns of the following countries: Afghanistan, Bangladesh, and China:
@@ -53,9 +51,6 @@ UPDATE actor
 SET first_name = "HARPO"
 WHERE first_name = "GROUCHO" AND last_name = "WILLIAMS";
 
-select * from actor
-where first_name = "groucho";
-
 -- 4d. Perhaps we were too hasty in changing GROUCHO to HARPO. It turns out that GROUCHO was the correct name after all! In a single query, if the first name of the actor is currently HARPO, change it to GROUCHO.
 UPDATE actor
 SET first_name = "GROUCHO"
@@ -63,7 +58,6 @@ WHERE first_name = "HARPO"AND last_name = "WILLIAMS";
 
 -- 5a. You cannot locate the schema of the address table. Which query would you use to re-create it?
 SHOW CREATE TABLE address;
--- Hint: https://dev.mysql.com/doc/refman/5.7/en/show-create-table.html
 
 -- 6a. Use JOIN to display the first and last names, as well as the address, of each staff member. Use the tables staff and address:
 SELECT staff.first_name, staff.last_name, address.address
@@ -71,13 +65,12 @@ FROM staff
 INNER JOIN address 
 ON staff.address_id=address.address_id;
 
-select SUM(amount) from payment;
-
 -- 6b. Use JOIN to display the total amount rung up by each staff member in August of 2005. Use tables staff and payment.
 SELECT staff.first_name, staff.last_name, SUM(amount)
 FROM staff
 INNER JOIN payment
 ON staff.staff_id=payment.staff_id
+WHERE payment_date LIKE "2005-08%"
 GROUP BY staff.staff_id;
 
 -- 6c. List each film and the number of actors who are listed for that film. Use tables film_actor and film. Use inner join.
